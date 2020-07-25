@@ -86,4 +86,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         return carsList;
     }
+
+    public int updateCar(Car car) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Util.KEY_NAME, car.getName());
+        contentValues.put(Util.KEY_PRICE, car.getPrice());
+
+        return db.update(Util.TABLE_NAME, contentValues, Util.KEY_ID + "=?",
+                new String[] {String.valueOf(car.getId())});
+    }
+
+    public void deleteCar(Car car) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(Util.TABLE_NAME, Util.KEY_ID + "=?",
+                new String[] {String.valueOf(car.getId())});
+
+        db.close();
+    }
+
+    public int getCarsCount() {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String countQuery = "SELECT * FROM " +Util.TABLE_NAME;
+        Cursor cursor = db.rawQuery(countQuery, null);
+        return cursor.getCount();
+    }
 }
